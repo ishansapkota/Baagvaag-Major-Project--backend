@@ -39,3 +39,10 @@ class RegistrationsSerializer(serializers.ModelSerializer):
             user.save()
         user_register = userRegister.objects.create(user=user,**validated_data,phone = phone)
         return user_register
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email','password']
+        
