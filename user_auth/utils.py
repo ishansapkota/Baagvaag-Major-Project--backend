@@ -3,8 +3,10 @@
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User
 
 def send_email_verification(user):
+        #auth_user = User.objects.get(pk=user.pk)
         token = default_token_generator.make_token(user)
         verification_link = f'http://localhost:8000/api/verify/{user.id}/{token}'
         subject = 'Verification of your Email'

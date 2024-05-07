@@ -141,4 +141,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'baag.vaag1@gmail.com'
-EMAIL_HOST_PASSWORD = 'Baagvaag@@01'
+EMAIL_HOST_PASSWORD = 'hfif frst zdzg dkwp'

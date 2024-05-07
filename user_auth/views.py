@@ -71,19 +71,14 @@ class Registration(APIView):
         if request.method == 'POST':
             serializer =  RegistrationsSerializer(data = request.data)
             if serializer.is_valid():
-                # email = serializer.validated_data.get('email')
-                # print(email)
-                
-                # user = User.objects.filter(email=email).first()
-                # print(user)
-                data = serializer.validated_data
-                print(data)
-                user = serializer.create(data)
+                serializer.save()
+                email = serializer.validated_data.get('email')
+                user = User.objects.filter(email=email).first()
                 print(user)
                 if user:
                     result = send_email_verification(user)
                     if result:   
-                            serializer.save()
+                            # serializer.save()
                             return Response("Verification link has been sent to your email.",status=status.HTTP_201_CREATED)
                             
                     else:
