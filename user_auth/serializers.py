@@ -46,3 +46,21 @@ class LoginSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email','password']
         
+    
+class ForgotPasswordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email']
+
+class ResetPasswordSerializer(serializers.ModelSerializer):
+    new_password = serializers.CharField(write_only = True, required=True)
+    confirm_new_password = serializers.CharField(write_only = True, required=True)
+
+    # def validate(self, attrs):
+    #     if attrs['new_password'] != attrs['confirm_new_password']:
+    #         raise serializers.ValidationError("Passwords do not match.")
+    #     return attrs
+    
+    class Meta:
+        model = User
+        fields = ['new_password','confirm_new_password']

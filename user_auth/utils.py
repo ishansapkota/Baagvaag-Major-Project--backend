@@ -20,4 +20,17 @@ def send_email_verification(user):
                 print(e)
                 return False
         
+def forgot_password(user):
+        token = default_token_generator.make_token(user)
+        reset_link = f'http://localhost:8000/api/reset_password/{user.id}/{token}'
+        subject = 'Resetting Password'
+        message = f'Click the following link to reset your password : {reset_link}'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [user.email]
+        try:
+                send_mail( subject, message, email_from, recipient_list)
+                return True
+        except Exception as e:
+                print(e)
+                return False
 

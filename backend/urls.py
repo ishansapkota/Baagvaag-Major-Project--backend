@@ -23,5 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/register/',views.Registration.as_view()),
     path('api/verify/<int:id>/<str:token>',views.EmailVerification.as_view()),
-    path('api/login',views.handleLogin.as_view())
+    path('api/login/',views.handleLogin.as_view()),
+    path('api/logout/',views.handleLogout.as_view()),
+    path('api/forgotpassword/',views.ForgotPassword.as_view()),
+    path('api/reset_password/<int:id>/<str:token>/',views.ResetPassword.as_view()),
 ]
