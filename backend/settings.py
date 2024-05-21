@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
+# import os
+#import cloudinary
+#import cloudinary_storage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +30,9 @@ SECRET_KEY = 'django-insecure-7b4n-=ws-j8)r11^-*#_^+a7jr0*0q4aysnx1h9_zc==3^z(ni
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_CREDENTIALS = True
 
 
 # Application definition
@@ -42,6 +47,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'user_auth',
     'rest_framework_simplejwt',
+    'forum',
+    'cloudinary',
+    'cloudinary_storage',
+    'corsheaders',
+    
 ]
 
 MIDDLEWARE = [
@@ -52,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+     "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -76,7 +87,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.BasicAuthentication', #commenting these out since JWT is in use
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
@@ -188,3 +199,22 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+
+# Managing Media
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dzcdirj0l',
+    'API_KEY': '625916248125919',
+    'API_SECRET': 'ZlO8y35ecL-dq5fQJewyQT0euV8'
+}
+
+# cloudinary.config(
+#     cloud_name = 'dzcdirj0l',
+#     api_key = '625916248125919',
+#     api_secret = 'ZlO8y35ecL-dq5fQJewyQT0euV8'
+# )

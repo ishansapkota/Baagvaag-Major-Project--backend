@@ -1,0 +1,12 @@
+services:
+
+  postgres:
+    image: postgres:latest #use tag 
+     
+    environment:
+      - POSTGRES_DB=baagvaag
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    
+    ports:
+      - "5444:5432"

@@ -16,15 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from user_auth import views
+from user_auth.views import *
+from forum.views import *
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/register/',views.Registration.as_view()),
-    path('api/verify/<int:id>/<str:token>',views.EmailVerification.as_view()),
-    path('api/login/',views.handleLogin.as_view()),
-    path('api/logout/',views.handleLogout.as_view()),
-    path('api/forgotpassword/',views.ForgotPassword.as_view()),
-    path('api/reset_password/<int:id>/<str:token>/',views.ResetPassword.as_view()),
+    path('api/register/',Registration.as_view()),
+    path('api/verify/<int:id>/<str:token>',EmailVerification.as_view()),
+    path('api/login/',handleLogin.as_view()),
+    path('api/logout/',handleLogout.as_view()),
+    path('api/forgotpassword/',ForgotPassword.as_view()),
+    path('api/reset_password/<int:id>/<str:token>/',ResetPassword.as_view()),
+    path('api/forum/',forumAPI.as_view()),
+    path('api/post/<int:id>/comments/',forumCommentAPI.as_view()),
 ]
