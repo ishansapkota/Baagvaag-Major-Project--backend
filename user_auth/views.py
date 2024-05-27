@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+import jwt,datetime
 
 
 # Create your views here.
@@ -56,6 +57,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import authenticate,login,logout
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
 
 
 
@@ -99,39 +105,59 @@ class EmailVerification(APIView):
         if request.method == "GET":    
             try:
                 user = User.objects.get(id=id)
+                custom_user = userRegister.objects.get(user_id = id)
             except:
                 return Response("User not found", status=status.HTTP_404_NOT_FOUND)
             if default_token_generator.check_token(user,token):
                 user.is_active = True
+                custom_user.is_verified = True
                 user.save()
+                custom_user.save()
                 return Response("Email has been verified",status=status.HTTP_202_ACCEPTED)
             else:
                 return Response("The token is invalid",status=status.HTTP_400_BAD_REQUEST)
         
-
+# @method_decorator(csrf_exempt, name='dispatch')
 class handleLogin(APIView):
      def post(self,request):
         serializer = LoginSerializer(data = request.data)
         if serializer.is_valid():
             user = authenticate(username = request.data['email'],password = request.data['password'])
-            check_user = User.objects.get(email = request.data['email'])
+            #check_user = userRegister.objects.get(email = request.data['email'])
             
-            if check_user.is_active is False:
+            if user == None:
                 return Response("User must be verified first!",status=status.HTTP_400_BAD_REQUEST)
+            # if user is None: #since if there is no user
+            # if check_user.is_verified == None:
+            #     return Response("User must be verified first!",status=status.HTTP_400_BAD_REQUEST)
+            
             if user:
                 login(request,user)
                 #return Response("User successfully logged in.",status=status.HTTP_202_ACCEPTED)
+                
                 refresh = RefreshToken.for_user(user)
-
-                return Response({
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token),
-                })
+                
+                if user.is_staff == False and user.is_active==True:
+                    # and check_user.is_verified == True
+                    return Response({
+                            'refresh': str(refresh),
+                            'access': str(refresh.access_token),
+                            'role' : "User"
+                        })
+                elif user.is_staff == True:
+                    return Response({
+                            'refresh': str(refresh),
+                            'access': str(refresh.access_token),
+                            'role' : "Admin"
+                        })
+                else:
+                    return Response("Invalid!",status=status.HTTP_401_UNAUTHORIZED)
+                # else:
+                #     return Response("User must be verified!Check your email for verification mail.",status=status.HTTP_403_FORBIDDEN)
             else:
                 return Response("Invalid attempt to log in.",status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response("Invalidated attempt",status=status.HTTP_400_BAD_REQUEST)
-        
 
 class handleLogout(APIView):
     def get(self,request):
@@ -178,3 +204,4 @@ class ResetPassword(APIView):
                 return Response("Passwords do not match!",status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response("Invalid Request",status=status.HTTP_400_BAD_REQUEST)
+

@@ -41,10 +41,12 @@ class RegistrationsSerializer(serializers.ModelSerializer):
         return user_register
 
 
-class LoginSerializer(serializers.ModelSerializer):
+class LoginSerializer(serializers.Serializer):
     class Meta:
         model = User
         fields = ['email','password']
+    # email = serializers.EmailField()
+    # password = serializers.CharField()
         
     
 class ForgotPasswordSerializer(serializers.ModelSerializer):
