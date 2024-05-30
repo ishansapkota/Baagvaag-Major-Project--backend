@@ -94,11 +94,11 @@ class forumPostingAPI(APIView):
                 result = serializer.validated_data
                 serializer.save(user=request.user)
                 print(result)
-                return Response('The post has been sent for approval!', status=status.HTTP_202_ACCEPTED)
+                return Response({"message":'The post has been sent for approval!'}, status=status.HTTP_202_ACCEPTED)
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         else:
-                return Response('User must log in!', status=status.HTTP_401_UNAUTHORIZED)
+                return Response({"message":'User must log in!'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class forumCommentAPI(APIView):
     def post(self,request,id):
@@ -108,16 +108,16 @@ class forumCommentAPI(APIView):
             serializer = ForumCommentSerializer(data = request.data)
             if serializer.is_valid():
                 serializer.save(post=post,user=request.user)
-                return Response("Comment has been made!",status=status.HTTP_201_CREATED)
+                return Response({"message":"Comment has been made!"},status=status.HTTP_201_CREATED)
             else:
-                return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message":serializer.errors},status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response("User must log in!", status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message":"User must log in!"}, status=status.HTTP_401_UNAUTHORIZED)
         
     def get(self,request,id):
         comments = forumComment.objects.filter(post_id=id)
         serializers = ForumCommentSerializer(comments,many=True)
-        return Response(serializers.data,status=status.HTTP_200_OK)
+        return Response({"message":serializers.data},status=status.HTTP_200_OK)
 
 
 class coordinatesGetAPI(APIView):
@@ -126,13 +126,13 @@ class coordinatesGetAPI(APIView):
         coordinates = forumPost.objects.filter(postDate__gte =one_day_ago)
         serializer = coordinatesGetSerializer(coordinates,many=True)
         
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response({"message":serializer.data},status=status.HTTP_200_OK)
     
 class unapprovedPostAPI(APIView):
     def get(self,request):
         posts = forumPost.objects.filter(is_approved = None )
         serializers = ForumSerializer(posts,many=True)
-        return Response(serializers.data,status=status.HTTP_200_OK)
+        return Response({"message":serializers.data},status=status.HTTP_200_OK)
     
 class postApprovalDeletionAPI(APIView):
     def post(self,request,id):
@@ -141,9 +141,9 @@ class postApprovalDeletionAPI(APIView):
         if request.user.is_staff:
             post.is_approved = True
             post.save()
-            return Response("The post has been approved by the admin",status=status.HTTP_202_ACCEPTED)
+            return Response({"message":"The post has been approved by the admin"},status=status.HTTP_202_ACCEPTED)
         else:
-            return Response("Only admin can approve the post!",status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message":"Only admin can approve the post!"},status=status.HTTP_401_UNAUTHORIZED)
         
 
     def delete(self,request,id):

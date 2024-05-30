@@ -145,11 +145,11 @@ class handleLogin(APIView):
                             'role' : "User"
                         })
                 elif user.is_staff == True:
-                    return Response({
+                    return Response({"message":{
                             'refresh': str(refresh),
                             'access': str(refresh.access_token),
                             'role' : "Admin"
-                        })
+                        }})
                 else:
                     return Response("Invalid!",status=status.HTTP_401_UNAUTHORIZED)
                 # else:
@@ -163,7 +163,7 @@ class handleLogout(APIView):
     def get(self,request):
         if request.user.is_authenticated:
             logout(request)
-            return Response("User has been logged out.",status=status.HTTP_200_OK)
+            return Response({"message":"User has been logged out."},status=status.HTTP_200_OK)
         else:
             return Response("User is not authenticated.",status=status.HTTP_401_UNAUTHORIZED)
         
