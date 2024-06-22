@@ -7,11 +7,20 @@ class ForumSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only = True)
     user_first_name = serializers.CharField(source='user.first_name',read_only = True)
     user_last_name = serializers.CharField(source='user.last_name',read_only = True)
+    
 
     class Meta:
         model = forumPost
         #fields = '__all__'
-        fields = ['id','postTitle','postDate','postTime','postImage','latitude','longitude','user_first_name','user_last_name']
+        fields = ['id','postTitle','postDate','postTime','latitude','longitude','user_first_name','user_last_name','postImageURL']
+    
+    def validate(self, data):
+        default_post_url = "https://asset.cloudinary.com/dzcdirj0l/bd1ba18b679f153c73de442c6ea9beb1"
+        print("hello")
+        if 'postImageURL' not in data or not data.get('postImageURL'):
+            data['postImageURL'] = default_post_url
+        return data
+        # postImageURL = data.pop['postImageURL']
 
 class ForumCommentSerializer(serializers.ModelSerializer):
     # user_email = serializers.EmailField(source='user.email', read_only=True)

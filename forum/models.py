@@ -15,11 +15,11 @@ from cloudinary.models import CloudinaryField
 class forumPost(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     postTitle = models.CharField(max_length=255)
-    postDate = models.DateField(null=True)
-    postTime = models.TimeField(null=True)
-    #postImageURL = models.URLField() #pillow library is required
+    postDate = models.CharField(null=True)
+    postTime = models.CharField(null=True)
+    postImageURL = models.CharField(null=True,blank=True) #pillow library is required
     #postImage = CloudinaryField('image',null = True, blank = True) #this 'image' inside the bracket of CloudinaryField signifies that the input to be taken is of image format
-    postImage = models.TextField(max_length = 200,null=True)
+    #postImage = models.TextField(max_length = 200,null=True)
     is_approved = models.BooleanField(null=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)

@@ -90,15 +90,20 @@ class forumPostingAPI(APIView):
         # return Response("balla bhayo myaa",status=status.HTTP_201_CREATED)
 
             serializer = ForumSerializer(data=request.data)
+            # default_post_url = "https://asset.cloudinary.com/dzcdirj0l/bd1ba18b679f153c73de442c6ea9beb1"
+            # if not serializer.initial_data['postImageURL']:
+            #     serializer.data['postImageURL'] = default_post_url
+            print(serializer.initial_data)
             if serializer.is_valid():
                 result = serializer.validated_data
                 serializer.save(user=request.user)
                 print(result)
                 return Response({"message":'The post has been sent for approval!'}, status=status.HTTP_202_ACCEPTED)
             else:
-                return Response({"message":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message":"Invalid attempt"}, status=status.HTTP_400_BAD_REQUEST)
         else:
                 return Response({"message":'User must log in!'}, status=status.HTTP_401_UNAUTHORIZED)
+        #add image column in this
 
 class forumCommentAPI(APIView):
     def post(self,request,id):
@@ -110,7 +115,7 @@ class forumCommentAPI(APIView):
                 serializer.save(post=post,user=request.user)
                 return Response({"message":"Comment has been made!"},status=status.HTTP_201_CREATED)
             else:
-                return Response({"message":serializer.errors},status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message":"Invalid attempt"},status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"message":"User must log in!"}, status=status.HTTP_401_UNAUTHORIZED)
         
@@ -123,10 +128,12 @@ class forumCommentAPI(APIView):
 class coordinatesGetAPI(APIView):
     def get(self,request):
         one_day_ago = timezone.now().date() - timedelta(days=1)
-        coordinates = forumPost.objects.filter(postDate__gte =one_day_ago)
+        coordinates = forumPost.objects.filter(postDate__gte =one_day_ago)#only approved post's coordinates
         serializer = coordinatesGetSerializer(coordinates,many=True)
         
-        return Response({"message":serializer.data},status=status.HTTP_200_OK)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    #get this from a table where the admin post coordinates in danger zone tab
     
 class unapprovedPostAPI(APIView):
     def get(self,request):

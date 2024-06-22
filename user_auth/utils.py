@@ -29,8 +29,8 @@ def forgot_password(user):
         recipient_list = [user.email]
         try:
                 send_mail( subject, message, email_from, recipient_list)
-                return True
+                return reset_link
         except Exception as e:
                 print(e)
-                return False
+                return False,None
 

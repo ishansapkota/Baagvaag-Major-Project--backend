@@ -36,4 +36,11 @@ urlpatterns = [
     path('api/post_coordinates',coordinatesGetAPI.as_view()),
     path('api/forum/unapproved',unapprovedPostAPI.as_view()),
     path('api/forum/approval/<int:id>',postApprovalDeletionAPI.as_view()),
+    path('api/kyc/<int:id>',KYCAPI.as_view()),
+    path('api/admin/add_ranger',AddRanger.as_view()),
+    path('api/change_to_admin/<int:id>',ChangeToAdmin.as_view()),
+    path('api/admin/list_user',ListUsers.as_view()),
+    path('api/admin/list_ranger',ListRangers.as_view()),
+    path('api/admin/delete_user/<int:id>',DeleteUserAdmin.as_view()),
+    path('api/admin/delete_ranger/<int:id>',DeleteRangerAdmin.as_view()),
 ]

@@ -11,6 +11,7 @@ class userRegister(models.Model):
     email = models.EmailField(max_length=30)
     phone = models.CharField(max_length=11)
     is_verified = models.BooleanField(null=True)
+    userImageURL = models.CharField(null=True)
     
     #fullAddress = models.CharField(max_length=50)
 
