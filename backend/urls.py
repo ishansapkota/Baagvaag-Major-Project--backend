@@ -43,4 +43,6 @@ urlpatterns = [
     path('api/admin/list_ranger',ListRangers.as_view()),
     path('api/admin/delete_user/<int:id>',DeleteUserAdmin.as_view()),
     path('api/admin/delete_ranger/<int:id>',DeleteRangerAdmin.as_view()),
+    path('api/admin/adddangerzone',AddDangerZoneAPI.as_view()),
+    path('api/admin/forum/post',AdminForumPostingAPI.as_view()),
 ]

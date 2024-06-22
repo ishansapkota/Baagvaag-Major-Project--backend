@@ -34,3 +34,9 @@ class forumComment(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     comment = models.CharField(max_length = 450)
     uploaded_on = models.DateTimeField(auto_now_add=True)
+
+
+class dangerZoneCoordandIOTPhotos(models.Model):
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
+    IOTImageURL = models.CharField(null=True,blank=True)

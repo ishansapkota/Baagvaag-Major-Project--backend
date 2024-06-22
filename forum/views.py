@@ -160,3 +160,28 @@ class postApprovalDeletionAPI(APIView):
             return Response("The post has been deleted and has been removed from database.",status=status.HTTP_204_NO_CONTENT)
         else:
             return Response("Only admin can delete the post!",status=status.HTTP_401_UNAUTHORIZED)
+        
+class AddDangerZoneAPI(APIView):
+    def post(self,request):
+        if request.user.is_superuser:
+             serializer = dangerZoneAddSerializer(data=request.data)
+             if serializer.is_valid():
+                 serializer.save()
+                 return Response("The coordinates have been saved!",status=status.HTTP_200_OK)
+             else:
+                 return Response("Invalid Response!",status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response("You must have admin perms",status=status.HTTP_400_BAD_REQUEST)
+        
+
+class AdminForumPostingAPI(APIView):
+    def post(self,request):
+        if request.user.is_superuser:
+            serializer = ForumSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(user=request.user,is_approved = True)
+                return Response({"message":"The post has been posted!"}, status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response({"message":"Invalid Attempt"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"message":"You must have admin perms"},status=status.HTTP_400_BAD_REQUEST)

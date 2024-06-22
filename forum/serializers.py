@@ -41,3 +41,9 @@ class coordinatesGetSerializer(serializers.ModelSerializer):
         model = forumPost
         fields = ['latitude','longitude',]
         
+
+class dangerZoneAddSerializer(serializers.ModelSerializer):
+    # postDate = serializers.DateField(read_only = True)
+    class Meta:
+        model = dangerZoneCoordandIOTPhotos
+        fields = ['latitude','longitude',]
