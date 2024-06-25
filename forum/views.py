@@ -76,7 +76,7 @@ class forumViewAPI(APIView):
         three_days_ago = timezone.now().date() - timedelta(days=3)
 
         posts = forumPost.objects.filter(is_approved = True,postDate__gte=three_days_ago)
-        #posts = forumPost.objects.all()
+        # iotposts = forumPost.objects.filter(user_id=None)
         serializer = ForumSerializer(posts,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
@@ -145,7 +145,7 @@ class postApprovalDeletionAPI(APIView):
     def post(self,request,id):
         post = forumPost.objects.get(id = id)
         print(post)
-        if request.user.is_staff:
+        if request.user.is_superuser == False and request.user.is_staff == True:
             post.is_approved = True
             post.save()
             return Response({"message":"The post has been approved by the admin"},status=status.HTTP_202_ACCEPTED)
@@ -155,7 +155,7 @@ class postApprovalDeletionAPI(APIView):
 
     def delete(self,request,id):
         post = forumPost.objects.get(id = id)
-        if request.user.is_staff:
+        if request.user.is_superuser == False and request.user.is_staff == True:
             post.delete()
             return Response("The post has been deleted and has been removed from database.",status=status.HTTP_204_NO_CONTENT)
         else:
@@ -163,7 +163,7 @@ class postApprovalDeletionAPI(APIView):
         
 class AddDangerZoneAPI(APIView):
     def post(self,request):
-        if request.user.is_superuser:
+        if request.user.is_superuser == False and request.user.is_staff == True:
              serializer = dangerZoneAddSerializer(data=request.data)
              if serializer.is_valid():
                  serializer.save()
@@ -174,9 +174,9 @@ class AddDangerZoneAPI(APIView):
             return Response("You must have admin perms",status=status.HTTP_400_BAD_REQUEST)
         
 
-class AdminForumPostingAPI(APIView):
+class RangerForumPostingAPI(APIView):
     def post(self,request):
-        if request.user.is_superuser:
+        if request.user.is_superuser == False and request.user.is_staff == True:
             serializer = ForumSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save(user=request.user,is_approved = True)
@@ -185,3 +185,72 @@ class AdminForumPostingAPI(APIView):
                 return Response({"message":"Invalid Attempt"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"message":"You must have admin perms"},status=status.HTTP_400_BAD_REQUEST)
+
+
+class ForumPostingIoTAPI(APIView):
+    def post(self,request):
+        serializer = ForumSerializer(data=request.data)
+        if serializer.is_valid():
+                serializer.save(user=None,is_approved = True)
+                return Response({"message":"The post has been posted!"}, status=status.HTTP_202_ACCEPTED)
+        else:
+                return Response({"message":"Invalid Attempt"}, status=status.HTTP_400_BAD_REQUEST)
+        
+class IOTImageFetchAPI(APIView):
+    def post(self,request):
+        try:
+            serializer = IoTImageSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"message":"The images from IoT have been saved!"},status=status.HTTP_200_OK)
+            else:
+                return Response({"message":"Invalid Attempt"},status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({"message":"Exception occured!"},status=status.HTTP_400_BAD_REQUEST)
+
+
+class IOTUnApprovedImageViewAPI(APIView):
+    def get(self,request):
+        try:
+            photos = IOTPhotos.objects.filter(is_approved = None)
+            serializer = IoTImageSerializer(photos,many=True)
+            return Response(serializer.data,status= status.HTTP_200_OK)
+        except:
+            return Response({"message":"IoT Photos exception!"},status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+class IOTImageApprovalAPI(APIView):
+    def put(self,request,id):
+        try:
+            approvephotos = IOTPhotos.objects.get(id=id)
+            if request.user.is_superuser:
+                approvephotos.is_approved = True
+                approvephotos.save()
+                return Response({"message":"The image from IoT has been approved!"},status=status.HTTP_200_OK)
+            else:
+                return Response({"message":"Only admin can approve the image."},status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({"message":"ImageApproval exception"},status=status.HTTP_400_BAD_REQUEST)
+        
+
+class IOTImageRejectionAPI(APIView):
+    def delete(self,request,id):
+        try:
+            approvephotos = IOTPhotos.objects.get(id=id)
+            if request.user.is_superuser:
+                approvephotos.delete()
+                return Response({"message":"The image from IoT has been rejected!"},status=status.HTTP_200_OK)
+            else:
+                return Response({"message":"Only admin can rejected the image."},status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({"message":"ImageRejection exception"},status=status.HTTP_400_BAD_REQUEST)
+
+class IOTApprovedImageViewAPI(APIView):
+    def get(self,request):
+        try:
+            photos = IOTPhotos.objects.filter(is_approved = True)
+            serializer = IoTImageSerializer(photos,many=True)
+            return Response(serializer.data,status= status.HTTP_200_OK)
+        except:
+            return Response({"message":"IoT Photos exception!"},status=status.HTTP_400_BAD_REQUEST)

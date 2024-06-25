@@ -30,7 +30,7 @@ class RegistrationsSerializer(serializers.ModelSerializer):
         #add address parameter below and pop that validated data and store it in address
         userImageURL = validated_data.pop('userImageURL',None)
 
-        default_image_url = "https://asset.cloudinary.com/dzcdirj0l/3f09f7b4d4daeaaa4f524705a7ccdbe5"
+        default_image_url = "https://res.cloudinary.com/dzcdirj0l/image/upload/v1717247398/default_user_x0lpcb.jpg"
         
         if not userImageURL:
             userImageURL = default_image_url
@@ -47,7 +47,7 @@ class RegistrationsSerializer(serializers.ModelSerializer):
             user.set_password(password)
             user.is_active = False
             user.save()
-        user_register = userRegister.objects.create(user=user,**validated_data)
+        user_register = userRegister.objects.create(user=user,**validated_data,userImageURL=userImageURL)
         return user_register
     
 # class KYCSerializer(serializers.ModelSerializer):

@@ -21,6 +21,11 @@ class ForumSerializer(serializers.ModelSerializer):
             data['postImageURL'] = default_post_url
         return data
         # postImageURL = data.pop['postImageURL']
+    # def iot(self,data):
+    #     if 'id'==None in data:
+    #         data['user_first_name']='IOT'
+    #         data['user_last_name'] = 'device'
+    #         return data
 
 class ForumCommentSerializer(serializers.ModelSerializer):
     # user_email = serializers.EmailField(source='user.email', read_only=True)
@@ -47,3 +52,9 @@ class dangerZoneAddSerializer(serializers.ModelSerializer):
     class Meta:
         model = dangerZoneCoordandIOTPhotos
         fields = ['latitude','longitude',]
+
+class IoTImageSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only = True)
+    class Meta:
+        model = IOTPhotos
+        fields = ['IOTImageURL','id']

@@ -43,6 +43,12 @@ urlpatterns = [
     path('api/admin/list_ranger',ListRangers.as_view()),
     path('api/admin/delete_user/<int:id>',DeleteUserAdmin.as_view()),
     path('api/admin/delete_ranger/<int:id>',DeleteRangerAdmin.as_view()),
-    path('api/admin/adddangerzone',AddDangerZoneAPI.as_view()),
-    path('api/admin/forum/post',AdminForumPostingAPI.as_view()),
+    path('api/ranger/adddangerzone',AddDangerZoneAPI.as_view()),
+    path('api/ranger/forum/post',RangerForumPostingAPI.as_view()),
+    path('api/iot/forum/post',ForumPostingIoTAPI.as_view()),
+    path('api/iot/image/fetch',IOTImageFetchAPI.as_view()),
+    path('api/iot/image/unapproved',IOTUnApprovedImageViewAPI.as_view()),
+    path('api/iot/image/approval/<int:id>',IOTImageApprovalAPI.as_view()),
+    path('api/iot/image/rejection/<int:id>',IOTImageRejectionAPI.as_view()),
+    path('api/iot/image',IOTApprovedImageViewAPI.as_view())
 ]

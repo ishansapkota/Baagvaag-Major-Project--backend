@@ -40,3 +40,7 @@ class dangerZoneCoordandIOTPhotos(models.Model):
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     IOTImageURL = models.CharField(null=True,blank=True)
+
+class IOTPhotos(models.Model):
+    IOTImageURL = models.CharField(null=True,blank=True)
+    is_approved = models.BooleanField(null=True)
