@@ -110,7 +110,15 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
 class RangerAddSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name','last_name','email','password','is_staff']
+        fields = ['first_name','last_name','email','password']
+        
+    def create(self, validated_data):
+        
+        password = validated_data.pop('password')
+        user = User(username=validated_data['email'],is_staff=True,**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
 
 class ListUsersSerializer(serializers.ModelSerializer):
     class Meta:

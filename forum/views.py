@@ -129,9 +129,15 @@ class coordinatesGetAPI(APIView):
     def get(self,request):
         one_day_ago = timezone.now().date() - timedelta(days=1)
         coordinates = forumPost.objects.filter(postDate__gte =one_day_ago)#only approved post's coordinates
+        coordinates2 = dangerZoneCoordandIOTPhotos.objects.all()
         serializer = coordinatesGetSerializer(coordinates,many=True)
-        
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        serializer2 = dangerZoneAddSerializer(coordinates2,many=True)
+
+        combined_data = {
+            'forum_post_coordinates': serializer.data,
+            'danger_zone_coordinates': serializer2.data
+        }
+        return Response(combined_data,status=status.HTTP_200_OK)
     
     #get this from a table where the admin post coordinates in danger zone tab
     

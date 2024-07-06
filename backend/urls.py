@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path
 from user_auth.views import *
 from forum.views import *
+from charity.views import *
+from khalti.views import *
 # from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
@@ -50,5 +52,11 @@ urlpatterns = [
     path('api/iot/image/unapproved',IOTUnApprovedImageViewAPI.as_view()),
     path('api/iot/image/approval/<int:id>',IOTImageApprovalAPI.as_view()),
     path('api/iot/image/rejection/<int:id>',IOTImageRejectionAPI.as_view()),
-    path('api/iot/image',IOTApprovedImageViewAPI.as_view())
+    path('api/iot/image',IOTApprovedImageViewAPI.as_view()),
+    path('api/admin/victim/add',AddVictim.as_view()),
+    path('api/admin/victim/list',ViewVictim.as_view()),
+    path('api/admin/victim/edit/<int:id>',EditVictimInfo.as_view()),
+    path('api/admin/victim/delete/<int:id>',DeleteVictimInfo.as_view()),
+    path('api/khalti/try/<int:id>',KhaltiInitiation.as_view()),
+    path('api/khalti/verify',KhaltiVerification.as_view()),
 ]
